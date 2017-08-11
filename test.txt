@@ -1,18 +1,80 @@
 account0 = web3.eth.accounts[0]
 account1 = web3.eth.accounts[1]
 account2 = web3.eth.accounts[2]
-
 account3 = web3.eth.accounts[3]
 account4 = web3.eth.accounts[4]
 account5 = web3.eth.accounts[5]
 account6 = web3.eth.accounts[6]
 
-web3.eth.getBalance()
+web3.eth.getBalance(account0)
+web3.eth.getBalance(account1)
+web3.eth.getBalance(account2)
+web3.eth.getBalance(account3)
+web3.eth.getBalance(account4)
+web3.eth.getBalance(account5)
+web3.eth.getBalance(account6)
 
+
+web3.eth.getBalance('0x5c65d2814417ab41655c6f71090a0dd85759faec')
+
+// creating an instance of GodCoinCrowdsale
 GodCoinCrowdsale.deployed().then(inst => { crowdsale = inst })
+
 crowdsale.token().then(addr => { tokenAddress = addr } )
 godCoinInstance = GodCoin.at(tokenAddress)
-godCoinInstance.balanceOf(account1).then(balance => balance.toString(10))
-GodCoinCrowdsale.deployed().then(inst => inst.sendTransaction({ from: account1, value: web3.toWei(5, "ether")}))
-godCoinInstance.balanceOf(account1).then(balance => account1GodTokenBalance = balance.toString(10))
-web3.fromWei(account1GodTokenBalance, "ether")
+
+web3.eth.getBalance('0x063c04f02b72a1cff5032e00958f998e162d988b')
+
+godCoinInstance.balanceOf('0x50cb4d6399f40d5da03603620089cf1751f2cb8e').then(balance => balance.toString(10))
+
+GodCoinCrowdsale.deployed().then(inst => inst.sendTransaction({ from: account2, value: web3.toWei(5, "ether")}))GodCoinCrowdsale.deployed().then(inst => inst.sendTransaction({ from: account2, value: web3.toWei(5, "ether")}))
+
+GodCoinCrowdsale.deployed().then(inst => inst.sendTransaction({ from: account2, to: '0x3622d762d36cca561f3f0f793a4b1b4a4ea405d4', value: web3.toWei(5, "ether")}))
+
+
+godCoinInstance.balanceOf(account2).then(balance => account2GodTokenBalance = balance.toString(10))
+web3.fromWei(account2GodTokenBalance, "ether")
+
+
+// output
+
+web3.eth.getBalance(account0)
+{ [String: '99772624500000000000'] s: 1, e: 19, c: [ 997726, 24500000000000 ] }
+
+ web3.eth.getBalance('account1')
+{ [String: '100000000000000000000'] s: 1, e: 20, c: [ 1000000 ] }
+
+web3.eth.getBalance(account0).toString(10);
+'99772624500000000000'
+
+web3.eth.getBalance(account3).toString(10);
+'100000000000000000000'
+web3.fromWei(godCoinInstance.balanceOf(account1).then(balance => balance.toString(10)), "ether")
+web3.fromWei(godCoinInstance.balanceOf(account1).then(balance => balance.toString(10)), "ether")
+web3.fromWei(web3.eth.getBalance(account3).toString(10), "ether")
+
+web3.fromWei(web3.eth.getBalance(account0).toString(10), "ether")
+
+// ether balance
+web3.fromWei(web3.eth.getBalance(account0), "ether").toString() 
+
+// god token balance
+web3.fromWei(godCoinInstance.balanceOf(account1).then(balance => balance), "ether").toString() 
+
+
+crowdsale.sendTransaction({ from: account1, value: web3.toWei(5, "ether")})
+
+web3.eth.sendTransaction({ from: account2, to: '0x3622d762d36cca561f3f0f793a4b1b4a4ea405d4', value: web3.toWei(5, "ether")})
+// important references
+https://etherscan.io/tokens
+https://github.com/eshon/conference
+https://raw.githubusercontent.com/jlsuarezs/ico-contracts-1/master/tenx.sol
+http://www.oraclize.it/
+
+web3.eth.sendTransaction({from: web3.eth.accounts[0], to: '0x50cb4d6399f40d5da03603620089cf1751f2cb8e', value: web3.toWei(1, 'ether')})
+
+web3.eth.sendTransaction({from: account0, to: '0x50cb4d6399f40d5da03603620089cf1751f2cb8e', value: web3.toWei(1, 'ether')})
+
+load_up = { from: account6, to: '0x34d2259113b5f10b7934ddebadc9fba9867de3c9', value: web3.toWei(5, "ether") }
+
+crowdsale.fund.sendTransaction(load_up)

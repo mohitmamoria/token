@@ -6,7 +6,7 @@ import './Crowdsale.sol';
 
 contract GodCoinCrowdsale is Crowdsale {
 
-  function GodCoinCrowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) Crowdsale(_startBlock, _endBlock, _rate, _wallet) {
+  function GodCoinCrowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _portfolioWallet, address _adminWallet) Crowdsale(_startBlock, _endBlock, _rate, _portfolioWallet, _adminWallet) {
   }
 
   // creates the token to be sold.
