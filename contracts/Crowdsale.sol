@@ -68,7 +68,7 @@ contract Crowdsale is usingOraclize {
     adminWallet           = _adminWallet;
     minimumAmountToInvest = 10;
 
-    updateRate();
+    // updateRate();
   }
 
   // creates the token to be sold. 
@@ -136,8 +136,6 @@ contract Crowdsale is usingOraclize {
   }
   
   function updateRate() payable {
-
-        if (msg.sender != adminWallet) throw;
 
         if (oraclize_getPrice("URL") > this.balance) {
             newOraclizeQuery("Oraclize query was NOT sent, please add some ETH to cover for the query fee");
