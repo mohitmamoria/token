@@ -2,7 +2,7 @@
 pragma solidity ^0.4.0;
 import './token/MintableToken.sol';
 import './math/SafeMath.sol';
-import "./oraclizeAPI.sol";
+
 /**
  * @title Crowdsale 
  * @dev Crowdsale is a base contract for managing a token crowdsale.
@@ -11,8 +11,7 @@ import "./oraclizeAPI.sol";
  * on a token per ETH rate. Funds collected are forwarded to a portfolioWallet 
  * as they arrive.
  */
-
-contract Crowdsale is usingOraclize {
+contract Crowdsale {
   using SafeMath for uint256;
 
   // The token being sold
@@ -23,20 +22,13 @@ contract Crowdsale is usingOraclize {
   uint256 public endBlock;
 
   // address where funds are collected
-  address public portfolioWallet;
-  address public adminWallet;
+  address public wallet;
 
   // how many token units a buyer gets per wei
   uint256 public rate;
-  bool public isFinalized;              // switched to true in operational state
 
   // amount of raised money in wei
   uint256 public weiRaised;
-  uint256 public minimumAmountToInvest;
-
-  // uint256 public constant adminFee =  5/100;
-  event newOraclizeQuery(string description);
-  event updatedRate(string rate);
 
   /**
    * event for token purchase logging
@@ -48,27 +40,17 @@ contract Crowdsale is usingOraclize {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
 
-  function Crowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _portfolioWallet, address _adminWallet) {
+  function Crowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) {
     require(_startBlock >= block.number);
     require(_endBlock >= _startBlock);
     require(_rate > 0);
-    require(_portfolioWallet != 0x0);
-    require(_adminWallet != 0x0);
-    
-    // oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);    
-    
-    isFinalized = false;                   //controls pre through crowdsale state
-    OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+    require(_wallet != 0x0);
 
-    token                 = createTokenContract();
-    startBlock            = _startBlock;
-    endBlock              = _endBlock;
-    rate                  = _rate;
-    portfolioWallet       = _portfolioWallet;
-    adminWallet           = _adminWallet;
-    minimumAmountToInvest = 10;
-
-    // updateRate();
+    token = createTokenContract();
+    startBlock = _startBlock;
+    endBlock = _endBlock;
+    rate = _rate;
+    wallet = _wallet;
   }
 
   // creates the token to be sold. 
@@ -80,46 +62,32 @@ contract Crowdsale is usingOraclize {
 
   // fallback function can be used to buy tokens
   function () payable {
-    if (isFinalized) throw;
     buyTokens(msg.sender);
-  }
-
-  function fund() payable returns(bool success) {
   }
 
   // low level token purchase function
   function buyTokens(address beneficiary) payable {
     require(beneficiary != 0x0);
-    require(msg.value > minimumAmountToInvest);
     require(validPurchase());
 
     uint256 weiAmount = msg.value;
 
-    // calculate 5% of token 
-    uint256 tokenToBeRemoved = weiAmount.mul(5).div(100);
-
     // calculate token amount to be created
-    uint256 tokens = weiAmount.sub(tokenToBeRemoved);
-    uint256 tokensGenerated = tokens.mul(rate);
+    uint256 tokens = weiAmount.mul(rate);
 
     // update state
-    weiRaised = weiRaised.add(weiAmount).sub(tokenToBeRemoved);
+    weiRaised = weiRaised.add(weiAmount);
 
-    token.mint(beneficiary, tokensGenerated);
-    TokenPurchase(msg.sender, beneficiary, weiAmount, tokensGenerated);
+    token.mint(beneficiary, tokens);
+    TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
     forwardFunds();
   }
 
-  // send ether to the fund collection portfolioWallet
+  // send ether to the fund collection wallet
   // override to create custom fund forwarding mechanisms
   function forwardFunds() internal {
-    uint256 weiAmount = msg.value;
-    uint256 adminAccount = weiAmount.mul(5).div(100);
-    uint256 portfolioAccount = weiAmount.sub(adminAccount);
-
-    portfolioWallet.transfer(portfolioAccount);
-    adminWallet.transfer(adminAccount);
+    wallet.transfer(msg.value);
   }
 
   // @return true if the transaction can buy tokens
@@ -134,55 +102,5 @@ contract Crowdsale is usingOraclize {
   function hasEnded() public constant returns (bool) {
     return block.number > endBlock;
   }
-  
-  function updateRate() payable {
 
-        if (oraclize_getPrice("URL") > this.balance) {
-            newOraclizeQuery("Oraclize query was NOT sent, please add some ETH to cover for the query fee");
-        } else {
-            newOraclizeQuery("Oraclize query was sent, standing by for the answer..");
-            oraclize_query(60, "URL", "json(http://52.36.17.111/GOD-token-rate).rate");
-        }
-    }
-
-
-  function __callback(bytes32 myid, string result, bytes proof) {
-      if (msg.sender != oraclize_cbAddress()) throw;
-      rate = parseInt(result);
-
-      updateRate();
-  }
-
-  /// @dev Ends the funding period and sends the ETH home
-  function finalize() external {
-    if (isFinalized) throw;
-    if (msg.sender != adminWallet) throw; // locks finalize to the ultimate ETH owner
-
-    // move to operational
-    isFinalized = true;
-  }
-
-  /// @dev Ends the funding period and sends the ETH home
-  function unfinalize() external {
-    if (!isFinalized) throw;
-    if (msg.sender != adminWallet) throw; // locks finalize to the ultimate ETH owner
-
-    // move to un operational
-    isFinalized = false;
-  }  
-
-  /// @dev update minimum amount to invest
-  function updateMinimumAmountToInvest(uint256 amount) external {
-    if (isFinalized) throw;
-    if (msg.sender != adminWallet) throw; // locks finalize to the ultimate ETH owner
-
-    minimumAmountToInvest = amount;
-  }
-
-
-  function setRate(uint256 _rate) {
-    if (msg.sender != adminWallet) throw;
-
-    rate = _rate;
-  }
 }
