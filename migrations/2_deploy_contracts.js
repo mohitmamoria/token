@@ -1,4 +1,4 @@
-var GodCoinCrowdsale = artifacts.require("./GodCoinCrowdsale.sol")
+var GodTokenCrowdsale = artifacts.require("./GodTokenCrowdsale.sol")
 
 module.exports = function(deployer, network, accounts) {
   const startBlock = web3.eth.blockNumber + 2
@@ -8,5 +8,5 @@ module.exports = function(deployer, network, accounts) {
   const portfolioWallet = web3.eth.accounts[0]
   const adminWallet = web3.eth.accounts[1]
 
-  deployer.deploy(GodCoinCrowdsale, startBlock, endBlock, rate, portfolioWallet, adminWallet)
+  deployer.deploy(GodTokenCrowdsale, startBlock, endBlock, rate, portfolioWallet, adminWallet)
 };
