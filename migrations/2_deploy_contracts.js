@@ -7,6 +7,7 @@ module.exports = function(deployer, network, accounts) {
   const rate = 2
   const portfolioWallet = web3.eth.accounts[0]
   const adminWallet = web3.eth.accounts[1]
+  const minInvestmentCap = new web3.BigNumber(web3.toWei(3.5, "ether"))
 
-  deployer.deploy(GodTokenCrowdsale, startBlock, endBlock, rate, portfolioWallet, adminWallet)
+  deployer.deploy(GodTokenCrowdsale, startBlock, endBlock, rate, portfolioWallet, adminWallet, minInvestmentCap)
 };

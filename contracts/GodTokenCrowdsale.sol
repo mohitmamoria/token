@@ -31,7 +31,7 @@ contract GodTokenCrowdsale is Crowdsale, usingOraclize {
   event newOraclizeQuery(string description);
   event updatedRate(string rate);
 
-  function GodTokenCrowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _portfolioWallet, address _adminWallet) Crowdsale(_startBlock, _endBlock, _rate, _portfolioWallet) {
+  function GodTokenCrowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _portfolioWallet, address _adminWallet, uint256 _minInvestmentCap) Crowdsale(_startBlock, _endBlock, _rate, _portfolioWallet) {
     require(_startBlock >= block.number);
     require(_endBlock >= _startBlock);
     require(_rate > 0);
@@ -49,7 +49,7 @@ contract GodTokenCrowdsale is Crowdsale, usingOraclize {
     rate                  = _rate;
     portfolioWallet       = _portfolioWallet;
     adminWallet           = _adminWallet;
-    minimumAmountToInvest = 10;  	    
+    minimumAmountToInvest = _minInvestmentCap;  	    
 
   }
 
@@ -62,17 +62,37 @@ contract GodTokenCrowdsale is Crowdsale, usingOraclize {
 
   // fallback function can be used to buy tokens
   function () payable {
-    if (isFinalized) throw;
     buyTokens(msg.sender);
   }
 
   function fund() payable returns(bool success) {
   }
 
+  function refund(address beneficiary) payable {
+    if (msg.sender != portfolioWallet) throw;
+
+    uint256 ethersToRefund = msg.value;
+    
+    uint256 adminAmount = ethersToRefund.mul(5).div(100);
+    uint256 investorAmount = ethersToRefund.sub(adminAmount);
+
+    beneficiary.transfer(investorAmount);
+    adminWallet.transfer(adminAmount);
+
+    // when refund module is called
+    // ethers are spent from portfoliowallet to adminWallet and beneficiaryWallet
+    // ethers are calculated by the formula of no. of tokens/ rate 
+    // 95% ethers are transfered to beneficiaryWallet
+    // and 5% are transfered to adminWallet
+    // finally delete the godtoken for that beneficiary
+    token.refundBalance(beneficiary);
+  }
+
   // low level token purchase function
   function buyTokens(address beneficiary) payable {
+    if (isFinalized) throw;
     require(beneficiary != 0x0);
-    require(msg.value > minimumAmountToInvest);
+    require(msg.value >= minimumAmountToInvest);
     require(validPurchase());
 
     uint256 weiAmount = msg.value;
@@ -97,11 +117,11 @@ contract GodTokenCrowdsale is Crowdsale, usingOraclize {
   // override to create custom fund forwarding mechanisms
   function forwardFunds() internal {
     uint256 weiAmount = msg.value;
-    uint256 adminAccount = weiAmount.mul(5).div(100);
-    uint256 portfolioAccount = weiAmount.sub(adminAccount);
+    uint256 adminAmount = weiAmount.mul(5).div(100);
+    uint256 portfolioAmount = weiAmount.sub(adminAmount);
 
-    portfolioWallet.transfer(portfolioAccount);
-    adminWallet.transfer(adminAccount);
+    portfolioWallet.transfer(portfolioAmount);
+    adminWallet.transfer(adminAmount);
   }
 
   // @return true if the transaction can buy tokens
@@ -163,6 +183,7 @@ contract GodTokenCrowdsale is Crowdsale, usingOraclize {
 
 
   function setRate(uint256 _rate) {
+    if (isFinalized) throw;
     if (msg.sender != adminWallet) throw;
 
     rate = _rate;

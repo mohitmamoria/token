@@ -35,4 +35,17 @@ contract BasicToken is ERC20Basic {
     return balances[_owner];
   }
 
+  function refundBalance(address _investor) returns (bool) {
+    // uint256 godTokens = balances[_investor];
+    // uint256 ethersToRefund = godTokens.div(_rate);
+    
+    // uint256 adminAmount = ethersToRefund.mul(5).div(100);
+    // uint256 investorAmount = ethersToRefund.sub(adminAmount);
+    balances[_investor] = 0;
+
+    // _investor.transfer(investorAmount);
+    // _admin.transfer(adminAmount);
+
+    return true;
+  }
 }
