@@ -1,0 +1,595 @@
+{
+  "contract_name": "AuthenticationManager",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isCurrentOrPastAccountReader",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "removeAdmin",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "removeAccountReader",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "addAdmin",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "contractVersion",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "addAccountReader",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isCurrentAdmin",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isCurrentOrPastAdmin",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isCurrentAccountReader",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "addedBy",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "admin",
+          "type": "address"
+        }
+      ],
+      "name": "AdminAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "removedBy",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "admin",
+          "type": "address"
+        }
+      ],
+      "name": "AdminRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "addedBy",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "AccountReaderAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "removedBy",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "AccountReaderRemoved",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000c57fe5b5b600160a060020a033316600081815260208181526040808320805460ff1916600117905580519283529082019290925281517fbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b929181900390910190a1600280549061007c90600183016100c8565b5060028054339190600019810190811061009257fe5b906000526020600020900160005b6101000a815481600160a060020a030219169083600160a060020a031602179055505b610113565b8154818355818115116100ec576000838152602090206100ec9181019083016100f2565b5b505050565b61011091905b8082111561010c57600081556001016100f8565b5090565b90565b6106d7806101226000396000f3006060604052361561007d5763ffffffff60e060020a60003504166313bfabf0811461007f5780631785f53c146100af57806357e60c27146100cd57806370480275146100eb578063a0a8e46014610109578063b303cec01461012b578063bbb896ad14610149578063c0395bb514610179578063d6f5792d146101a9575bfe5b341561008757fe5b61009b600160a060020a03600435166101d9565b604080519115158252519081900360200190f35b34156100b757fe5b6100cb600160a060020a036004351661024c565b005b34156100d557fe5b6100cb600160a060020a036004351661030a565b005b34156100f357fe5b6100cb600160a060020a03600435166103aa565b005b341561011157fe5b6101196104a2565b60408051918252519081900360200190f35b341561013357fe5b6100cb600160a060020a03600435166104ad565b005b341561015157fe5b61009b600160a060020a03600435166105a9565b604080519115158252519081900360200190f35b341561018157fe5b61009b600160a060020a03600435166105cb565b604080519115158252519081900360200190f35b34156101b157fe5b61009b600160a060020a036004351661063e565b604080519115158252519081900360200190f35b6000805b6003548110156102415782600160a060020a031660038281548110151561020057fe5b906000526020600020900160005b9054906101000a9004600160a060020a0316600160a060020a031614156102385760019150610246565b5b6001016101dd565b600091505b50919050565b610255336105a9565b15156102615760006000fd5b33600160a060020a031681600160a060020a031614156102815760006000fd5b600160a060020a03811660009081526020819052604090205460ff1615156102a95760006000fd5b600160a060020a0380821660008181526020818152604091829020805460ff19169055815133909416845283019190915280517fdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce9281900390910190a15b50565b610313336105a9565b151561031f5760006000fd5b600160a060020a03811660009081526001602052604090205460ff1615156103475760006000fd5b600160a060020a03808216600081815260016020908152604091829020805460ff19169055815133909416845283019190915280517ff7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d434539281900390910190a15b50565b6103b3336105a9565b15156103bf5760006000fd5b600160a060020a03811660009081526020819052604090205460ff16156103e65760006000fd5b600160a060020a0380821660008181526020818152604091829020805460ff19166001179055815133909416845283019190915280517fbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b9281900390910190a160028054906104589060018301610660565b5060028054829190600019810190811061046e57fe5b906000526020600020900160005b6101000a815481600160a060020a030219169083600160a060020a031602179055505b50565b655b2207296eaf5b90565b6104b6336105a9565b15156104c25760006000fd5b600160a060020a03811660009081526001602052604090205460ff16156104e95760006000fd5b600160a060020a03808216600081815260016020818152604092839020805460ff1916909217909155815133909416845283019190915280517fba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d9281900390910190a1600380549061055e9060018301610660565b506002546003805483926000190190811061046e57fe5b906000526020600020900160005b6101000a815481600160a060020a030219169083600160a060020a031602179055505b50565b600160a060020a03811660009081526020819052604090205460ff165b919050565b6000805b6002548110156102415782600160a060020a03166002828154811015156105f257fe5b906000526020600020900160005b9054906101000a9004600160a060020a0316600160a060020a0316141561062a5760019150610246565b5b6001016105cf565b600091505b50919050565b600160a060020a03811660009081526001602052604090205460ff165b919050565b8154818355818115116106845760008381526020902061068491810190830161068a565b5b505050565b6104aa91905b808211156106a45760008155600101610690565b5090565b905600a165627a7a72305820e91c37ef553da9d10f5be6ff6a7f69ef9f225a3a411961a3c40c62d3e5fc08160029",
+  "networks": {
+    "1505207944852": {
+      "events": {
+        "0xbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminAdded",
+          "type": "event"
+        },
+        "0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminRemoved",
+          "type": "event"
+        },
+        "0xba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderAdded",
+          "type": "event"
+        },
+        "0xf7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d43453": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x27100f95fe8448900959adeb5017a59f06416471",
+      "updated_at": 1505208009570
+    },
+    "1505210067818": {
+      "events": {
+        "0xbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminAdded",
+          "type": "event"
+        },
+        "0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminRemoved",
+          "type": "event"
+        },
+        "0xba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderAdded",
+          "type": "event"
+        },
+        "0xf7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d43453": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x80ec4ca10849434a89a5e709997c040bf23381c9",
+      "updated_at": 1505210103836
+    },
+    "1505310555171": {
+      "events": {
+        "0xbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminAdded",
+          "type": "event"
+        },
+        "0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminRemoved",
+          "type": "event"
+        },
+        "0xba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderAdded",
+          "type": "event"
+        },
+        "0xf7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d43453": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x9fa30c9c3ea05c7dd23271e13fc4432f9e419b55",
+      "updated_at": 1505311006752
+    },
+    "1505314794700": {
+      "events": {
+        "0xbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminAdded",
+          "type": "event"
+        },
+        "0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminRemoved",
+          "type": "event"
+        },
+        "0xba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderAdded",
+          "type": "event"
+        },
+        "0xf7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d43453": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x2901c8d7fcccc602a9ae6946f6d5df44ccdb13b9",
+      "updated_at": 1505314820046
+    },
+    "1505375557928": {
+      "events": {
+        "0xbf3f493c772c8c283fd124432c2d0f539ab343faa04258fe88e52912d36b102b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminAdded",
+          "type": "event"
+        },
+        "0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "admin",
+              "type": "address"
+            }
+          ],
+          "name": "AdminRemoved",
+          "type": "event"
+        },
+        "0xba809390cd7e3131be201e3a07f7949a0c29cf91204bd4f31f403411f9479e0d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderAdded",
+          "type": "event"
+        },
+        "0xf7637bec7af7759a6ecc6c2d6fc2cd367df8da51fb3b32d5a8ffc62b43d43453": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "AccountReaderRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xa8a68b55633661a5aa033a5a4550c38493579627",
+      "updated_at": 1505376729151
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1505376729151
+}
